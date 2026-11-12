@@ -1,0 +1,77 @@
+/*
+  Tokens — Vital Apex. Fonte: vital-apex-design-system.pdf v1.0 (out/2026).
+  Valores marcados "derivado" não estão no PDF; saem dos tokens e estão em UI.md.
+  Temas: off-white (padrão) e azul profundo, por prefers-color-scheme.
+*/
+
+@font-face { font-family: Amoera; src: url("../assets/fonts/amoera-brand.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: Poppins; src: url("../assets/fonts/poppins-light.ttf") format("truetype"); font-weight: 300; font-display: swap; }
+@font-face { font-family: Poppins; src: url("../assets/fonts/poppins-regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+
+:root {
+  color-scheme: light dark;
+
+  /* Paleta da marca */
+  --azul: #123b4a;
+  --salvia: #b7c9be;
+  --pedra: #a2a29d;
+  --dourado: #d8a980;
+  --offwhite: #f5f3ee;
+  --grafite: #333333;
+  --erro: #a33b2f;
+  --sucesso: #2f6b4f;
+
+  /* Papéis (tema claro) */
+  --fundo: var(--offwhite);
+  --fundo-alt: #ffffff;
+  --fundo-azul: var(--azul);
+  --superficie: #ffffff;
+  --texto: var(--grafite);
+  --titulo: var(--azul);
+  --suave: #4f5c58;            /* derivado: 6,3:1 sobre off-white */
+  --linha: #d8dcd5;            /* decorativa */
+  --botao-fundo: var(--azul);
+  --botao-texto: var(--offwhite);
+  --foco: var(--azul);
+  --erro-texto: var(--erro);
+
+  /* Tipografia */
+  --fonte-titulo: Amoera, Poppins, sans-serif;
+  --fonte-texto: Poppins, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --texto-base: 1rem;
+  --texto-abertura: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);
+  --titulo-display: clamp(3rem, 1.6rem + 6vw, 6rem);
+  --titulo-secao: clamp(2.25rem, 1.3rem + 4vw, 4rem);
+  --titulo-cartao: 1.75rem;
+
+  /* Espaço: base de 8 px */
+  --e1: 0.5rem;
+  --e2: 1rem;
+  --e3: 1.5rem;
+  --e4: 2rem;
+  --e5: 3rem;
+  --e6: 4rem;
+  --secao-y: clamp(4rem, 3rem + 5vw, 6rem);   /* 96 px no desktop */
+
+  --raio: 2px;
+  --largura-max: 74rem;
+  --alvo-min: 2.75rem;
+  --altura-topo: 5.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: var(--azul);
+    --fundo-alt: #17485a;       /* derivado */
+    --fundo-azul: #0c2a35;      /* derivado */
+    --superficie: #17485a;      /* derivado */
+    --texto: var(--offwhite);
+    --titulo: var(--offwhite);
+    --suave: #c5d0ca;           /* derivado: 7,5:1 sobre o azul */
+    --linha: #2f5868;           /* decorativa */
+    --botao-fundo: var(--offwhite);
+    --botao-texto: var(--azul);
+    --foco: var(--offwhite);
+    --erro-texto: #f0b4aa;      /* derivado: 6,7:1 sobre o azul */
+  }
+}

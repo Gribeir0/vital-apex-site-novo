@@ -1,0 +1,175 @@
+/* Base: reset, tipografia, layout, topo, seções e rodapé. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-padding-top: calc(var(--altura-topo) + 1rem); -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-texto);
+  font-size: var(--texto-base);
+  font-weight: 400;
+  line-height: 1.625;
+  text-rendering: optimizeLegibility;
+}
+body.dialogo-aberto { overflow: hidden; }
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+
+h1, h2, h3, p, li, dd, summary { overflow-wrap: break-word; }
+
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
+
+.titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 300;
+  color: var(--titulo);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.titulo--display { font-size: var(--titulo-display); line-height: 1; }
+.titulo--secao { font-size: var(--titulo-secao); line-height: 1.06; }
+.titulo--cartao { font-size: var(--titulo-cartao); line-height: 1.2; }
+.ponto { color: var(--dourado); }
+
+/* Texto só para leitor de tela */
+.so-leitor { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+.sobretitulo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--suave);
+  margin-bottom: var(--e3);
+}
+.sobretitulo::before { content: ""; flex: none; width: 2.5rem; height: 1px; background: var(--dourado); }
+
+.abertura { font-size: var(--texto-abertura); font-weight: 300; line-height: 1.7; }
+.suave { color: var(--suave); }
+
+.container { width: min(100% - 2rem, var(--largura-max)); margin-inline: auto; }
+@media (min-width: 40em) { .container { width: min(100% - 4rem, var(--largura-max)); } }
+
+.pular {
+  position: absolute;
+  left: var(--e2);
+  top: -6rem;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alvo-min);
+  padding: 0 var(--e2);
+  background: var(--botao-fundo);
+  color: var(--botao-texto);
+  border-radius: var(--raio);
+}
+.pular:focus { top: var(--e1); }
+
+/* Topo */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--fundo);
+  border-bottom: 1px solid var(--linha);
+}
+.topo__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e2) var(--e4);
+  min-height: var(--altura-topo);
+}
+.marca { display: inline-flex; align-items: center; min-height: var(--alvo-min); }
+.marca img { width: clamp(9.5rem, 8rem + 6vw, 13.5rem); height: auto; }
+
+.nav { display: flex; align-items: center; gap: var(--e4); }
+.nav__lista { display: flex; align-items: center; gap: var(--e4); }
+.nav__lista a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alvo-min);
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.menu-botao {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e1);
+  min-height: var(--alvo-min);
+  min-width: var(--alvo-min);
+  padding: 0 var(--e2);
+  background: transparent;
+  border: 1px solid var(--titulo);
+  border-radius: var(--raio);
+  color: var(--titulo);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+@media (max-width: 55em) {
+  .js .menu-botao { display: inline-flex; }
+  .js .nav { display: none; }
+  .js .nav.aberto {
+    display: block;
+    position: absolute;
+    inset: 100% 0 auto 0;
+    background: var(--fundo);
+    border-bottom: 1px solid var(--linha);
+    padding: var(--e2) 1rem var(--e3);
+  }
+  .js .nav.aberto .nav__lista { flex-direction: column; align-items: stretch; gap: 0; margin-bottom: var(--e2); }
+  .js .nav.aberto .nav__lista a { min-height: 3rem; border-bottom: 1px solid var(--linha); }
+  .js .nav.aberto .botao { width: 100%; }
+  .topo__linha { position: relative; }
+  /* Sem JavaScript o menu fica visível e quebra em linhas. */
+  html:not(.js) .nav { flex-wrap: wrap; }
+  html:not(.js) .nav__lista { flex-wrap: wrap; gap: 0 var(--e3); }
+}
+
+/* Seções */
+.secao { padding-block: var(--secao-y); }
+.secao--alt { background: var(--fundo-alt); }
+.secao--azul { background: var(--fundo-azul); color: var(--offwhite); --titulo: var(--offwhite); --suave: #c5d0ca; --foco: var(--offwhite); }
+.secao--azul .sobretitulo { color: var(--dourado); }
+
+/* Rodapé */
+.rodape { background: var(--fundo-azul); color: var(--offwhite); padding-block: var(--e6) var(--e4); --titulo: var(--offwhite); --suave: #c5d0ca; --foco: var(--offwhite); }
+.rodape .link-seta { color: var(--offwhite); }
+.rodape__topo { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--e4); padding-bottom: var(--e4); border-bottom: 1px solid rgb(245 243 238 / 0.2); }
+.rodape__marca img { width: clamp(11rem, 9rem + 8vw, 16rem); height: auto; margin-bottom: var(--e3); }
+.rodape__frase { font-family: var(--fonte-titulo); font-weight: 300; text-transform: uppercase; font-size: 1.5rem; line-height: 1.25; max-width: 24rem; }
+.rodape__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e2) var(--e4); padding-top: var(--e3); font-size: 0.8125rem; color: #c5d0ca; }
+.rodape__base p { max-width: 46rem; }
+.rodape__links { display: flex; flex-wrap: wrap; gap: var(--e1) var(--e3); }
+.link-simples {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alvo-min);
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+/* A rolagem suave fica em css/movimento.css: remover aquele arquivo desliga todo o movimento. */

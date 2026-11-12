@@ -1,0 +1,145 @@
+/*
+  Movimento — Vital Apex. Camada em CSS puro, sem JavaScript de animação.
+
+  Escrito do zero, com os padrões do transitions.dev como referência
+  (30-Playbooks/design-sites/base.md). Nenhum trecho foi copiado de lá.
+  Catálogo e duração de cada efeito: UI.md. Para desligar tudo, remova o <link>
+  deste arquivo no index.html: o site continua completo, só sem movimento.
+
+  Regras:
+  - Tudo dentro de prefers-reduced-motion: no-preference. Sem isso, o site é estático.
+  - Sem opacity em texto da página, para o contraste medido ser o real e o LCP
+    não atrasar. Só transform, cor, stroke-dashoffset e, no FAQ e nos links, a
+    altura do painel (block-size) e o tamanho do filete (background-size).
+  - Dois momentos de destaque: entrada do herói e seções que surgem ao rolar.
+*/
+
+:root {
+  --mov-curta: 150ms;
+  --mov-media: 240ms;
+  --mov-longa: 480ms;
+  --mov-curva: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  html { scroll-behavior: smooth; }
+
+  /* --- Botões e links --------------------------------------------------- */
+
+  .botao {
+    transition: transform var(--mov-curta) var(--mov-curva), background-color var(--mov-curta) var(--mov-curva), color var(--mov-curta) var(--mov-curva);
+  }
+  .botao:active { transform: translateY(1px); }
+
+  .nav__lista a {
+    background: linear-gradient(var(--dourado), var(--dourado)) left calc(50% + 0.85em) / 0 1px no-repeat;
+    transition: background-size var(--mov-media) var(--mov-curva);
+  }
+
+  .link-seta > span {
+    background-size: 35% 1px;
+    transition: background-size var(--mov-media) var(--mov-curva);
+  }
+  .link-seta::after { transition: transform var(--mov-media) var(--mov-curva); }
+
+  /* Elevação e filete só em tela com mouse; no toque ficaria "preso". */
+  @media (hover: hover) {
+    .botao:hover { transform: translateY(-1px); }
+    .botao--contorno:hover { background-color: var(--titulo); color: var(--fundo); }
+    .secao--azul .botao--contorno:hover { background-color: var(--offwhite); color: var(--azul); }
+    .nav__lista a:hover { background-size: 100% 1px; }
+    .link-seta:hover > span { background-size: 100% 1px; }
+    .link-seta:hover::after { transform: translate(3px, -3px); }
+    .link-seta.seta--baixo:hover::after { transform: translateY(3px); }
+    .link-seta.seta--topo:hover::after { transform: translateY(-3px); }
+  }
+
+  /* --- Cartões ---------------------------------------------------------- */
+
+  .cartao { transition: transform var(--mov-media) var(--mov-curva); }
+  .cartao__moldura img { transition: transform 600ms var(--mov-curva); }
+  .cartao__corpo { position: relative; }
+  .cartao__corpo::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--dourado);
+    transform: scaleX(0.25);
+    transform-origin: left;
+    transition: transform var(--mov-longa) var(--mov-curva);
+  }
+  @media (hover: hover) {
+    .cartao:hover { transform: translateY(-2px); }
+    .cartao:hover .cartao__moldura img { transform: scale(1.03); }
+    .cartao:hover .cartao__corpo::before { transform: scaleX(1); }
+  }
+
+  /* --- Momento 1: entrada do herói -------------------------------------- */
+  /* Só deslocamento, sem opacity: o título é o candidato a LCP. */
+
+  @keyframes mov-entrada { from { transform: translateY(0.75rem); } to { transform: none; } }
+  @keyframes mov-desenhar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+  .heroi__copia > * { animation: mov-entrada var(--mov-longa) var(--mov-curva) backwards; }
+  .heroi__copia > :nth-child(2) { animation-delay: 80ms; }
+  .heroi__copia > :nth-child(3) { animation-delay: 160ms; }
+  .heroi__copia > :nth-child(4) { animation-delay: 240ms; }
+  .heroi__copia > :nth-child(5) { animation-delay: 320ms; }
+
+  .arco path { stroke-dasharray: 1; animation: mov-desenhar 1600ms var(--mov-curva) 200ms backwards; }
+  .arco path:nth-child(2) { animation-delay: 400ms; }
+  .arco path:nth-child(3) { animation-delay: 600ms; }
+
+  /* --- Momento 2: seções surgem ao rolar -------------------------------- */
+  /* Melhoria progressiva: só onde há animação ligada à rolagem. */
+
+  @keyframes mov-surgir { from { transform: translateY(1.5rem); } to { transform: none; } }
+
+  @supports (animation-timeline: view()) {
+    /* Só em blocos sem hover próprio: a animação com fill "both" travaria o transform deles. */
+    [data-surgir] {
+      animation: mov-surgir linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+
+  /* --- Painel do FAQ ---------------------------------------------------- */
+
+  @supports (selector(::details-content)) and (interpolate-size: allow-keywords) {
+    .faq details { interpolate-size: allow-keywords; }
+    .faq details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size 300ms var(--mov-curva), content-visibility 300ms allow-discrete;
+    }
+    .faq details[open]::details-content { block-size: auto; }
+  }
+  .faq summary::after { transition: background-size var(--mov-media) var(--mov-curva); }
+
+  /* --- Menu do celular -------------------------------------------------- */
+
+  @keyframes mov-menu { from { transform: translateY(-0.5rem); } to { transform: none; } }
+  .js .nav.aberto { animation: mov-menu var(--mov-media) var(--mov-curva); }
+
+  /* --- Diálogos --------------------------------------------------------- */
+  /* O painel só se desloca; quem escurece é o fundo (cor do ::backdrop). */
+
+  dialog {
+    transform: translateY(1rem);
+    transition: transform var(--mov-media) var(--mov-curva), overlay var(--mov-media) allow-discrete, display var(--mov-media) allow-discrete;
+  }
+  dialog[open] { transform: none; }
+  @starting-style { dialog[open] { transform: translateY(1rem); } }
+
+  dialog::backdrop {
+    background-color: rgb(12 42 53 / 0);
+    transition: background-color var(--mov-media) var(--mov-curva), overlay var(--mov-media) allow-discrete, display var(--mov-media) allow-discrete;
+  }
+  dialog[open]::backdrop { background-color: rgb(12 42 53 / 0.6); }
+  @starting-style { dialog[open]::backdrop { background-color: rgb(12 42 53 / 0); } }
+}
